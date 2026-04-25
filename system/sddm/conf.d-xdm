@@ -1,0 +1,11 @@
+# OpenRC display manager selector — installed to /etc/conf.d/xdm by install.sh.
+#
+# Pairs with the `xdm` init script (rc-service xdm start / rc-update add xdm default).
+# SDDM itself reads /etc/sddm.conf and /etc/sddm.conf.d/*.conf — see ../sddm.conf.d/.
+
+# Virtual terminal the display manager runs on. SDDM defaults to VT1 on Wayland
+# but the xdm init script hardcodes a VT check; leave at 7 unless you've
+# changed /etc/inittab.
+CHECKVT=7
+
+DISPLAYMANAGER="sddm"

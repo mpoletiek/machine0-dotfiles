@@ -1,0 +1,91 @@
+# GRUB Stylish — modernized to match Everforest / Hyprland aesthetic.
+#
+# Design notes:
+#   - Pure black desktop, wallpaper centered with padding (matches Noctalia
+#     fillColor #000000 / Plymouth / SDDM).
+#   - Centered single-column menu — narrow, no boxy chrome.
+#   - Selected item uses an accent-tinted pixmap from a single 1x1 helper
+#     PNG; falls back to color if the asset isn't present.
+#   - Hostname label centered at top, timeout countdown discreet at bottom.
+#   - No icons (boot menu doesn't need OS logos here — single-OS machine).
+
+# ------------------------------------------------------------ globals
+title-text: ""
+desktop-image: "background.jpg"
+desktop-image-scale-method: "padding"
+desktop-image-h-align: "center"
+desktop-image-v-align: "center"
+desktop-color: "#000000"
+
+terminal-font: "Terminus Regular 18"
+terminal-left: "5%"
+terminal-top: "10%"
+terminal-width: "90%"
+terminal-height: "80%"
+terminal-border: "0"
+
+# ------------------------------------------------------------ title
++ label {
+  id = "__title__"
+  text = "machine0"
+  top = 8%
+  left = 0
+  width = 100%
+  align = "center"
+  color = "#d3c6aa"
+  font = "DejaVu Sans Regular 48"
+}
+
++ label {
+  text = "gentoo · linux"
+  top = 14%
+  left = 0
+  width = 100%
+  align = "center"
+  color = "#9da9a0"
+  font = "DejaVu Sans Regular 16"
+}
+
+# ------------------------------------------------------------ boot menu
+# Centered narrow column. Boxless: no item_pixmap_style, no
+# selected_item_pixmap_style — pure color-based selection indicator.
++ boot_menu {
+  left = 30%
+  top = 30%
+  width = 40%
+  height = 50%
+
+  item_font = "DejaVu Sans Regular 24"
+  item_color = "#9da9a0"
+  selected_item_color = "#a7c080"
+
+  item_height = 48
+  item_padding = 14
+  item_spacing = 6
+  item_icon_space = 0
+  icon_width = 0
+  icon_height = 0
+}
+
+# ------------------------------------------------------------ timeout
++ label {
+  id = "__timeout__"
+  text = "booting in %d"
+  top = 88%
+  left = 0
+  width = 100%
+  align = "center"
+  color = "#9da9a0"
+  font = "DejaVu Sans Regular 14"
+}
+
+# ------------------------------------------------------------ help hint
++ label {
+  text = "↑↓ select   ↵ boot   e edit   c console"
+  top = 92%
+  left = 0
+  width = 100%
+  align = "center"
+  color = "#3d484d"
+  font = "DejaVu Sans Regular 12"
+}

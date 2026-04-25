@@ -1,0 +1,12 @@
+[SddmGreeterTheme]
+Name=Everforest Warrior
+Description=Everforest-themed SDDM greeter matching the Hyprland/Hyprlock look — forthethrone.jpg backdrop, JetBrainsMono Nerd Font, a7c080/83c092 accents.
+Author=mpoletiek
+License=MIT
+Type=sddm-theme
+Version=1.0
+Theme-Id=everforest-warrior
+Theme-API=2.0
+QtVersion=6
+MainScript=Main.qml
+ConfigFile=theme.conf

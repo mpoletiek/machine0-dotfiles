@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Everforest
+Description=Everforest-dark theme matching SDDM warrior, Hyprland, Noctalia.
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/everforest
+ScriptFile=/usr/share/plymouth/themes/everforest/everforest.script

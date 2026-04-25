@@ -1,0 +1,314 @@
+#
+# Everforest — Plymouth theme matching SDDM/Hyprland/Noctalia.
+#
+# Pure-PNG asset model. Plymouth's initramfs renderer has no Pango/Freetype,
+# so all text is pre-rendered by build-assets.sh.
+#
+# Sprite strategy: every sprite is created once at script-load with opacity 0
+# where appropriate, then opacity-toggled in callbacks. Bundled themes
+# (solar, glow) follow this pattern — runtime Sprite() calls inside callbacks
+# can be flaky on some plymouth builds.
+#
+# Background fits screen using contain mode (preserve aspect, letterbox)
+# to match Noctalia's "Fit (contain)" wallpaper rendering. Plymouth reloads
+# the script when display resolution changes (efifb -> nvidia-drm), so the
+# fit recomputes naturally.
+#
+
+# ---------- screen + palette ----------
+sw = Window.GetWidth();
+sh = Window.GetHeight();
+cx = sw / 2;
+cy = sh / 2;
+
+# Pure black for letterbox bars — matches Noctalia fillColor #000000.
+Window.SetBackgroundTopColor(0.0, 0.0, 0.0);
+Window.SetBackgroundBottomColor(0.0, 0.0, 0.0);
+
+# ---------- background ----------
+# Pre-rendered at native screen res with letterbox baked in by build-assets.sh.
+# If asset matches current Window dimensions: blit 1:1 (crisp). Otherwise
+# fall back to runtime scale.
+bg_orig = Image("background.png");
+bg_w = bg_orig.GetWidth();
+bg_h = bg_orig.GetHeight();
+
+if (bg_w == sw && bg_h == sh) {
+    bg_img = bg_orig;
+} else {
+    scale_w = sw / bg_w;
+    scale_h = sh / bg_h;
+    s = scale_w;
+    if (scale_h < scale_w) s = scale_h;
+    bg_img = bg_orig.Scale(Math.Int(bg_w * s), Math.Int(bg_h * s));
+}
+bg_sprite = Sprite(bg_img);
+bg_sprite.SetX((sw - bg_img.GetWidth()) / 2);
+bg_sprite.SetY((sh - bg_img.GetHeight()) / 2);
+bg_sprite.SetZ(0);
+
+# Vignette — match screen size if possible
+vig_orig = Image("vignette.png");
+if (vig_orig.GetWidth() == sw && vig_orig.GetHeight() == sh) {
+    vig_img = vig_orig;
+} else {
+    vig_img = vig_orig.Scale(sw, sh);
+}
+vig_sprite = Sprite(vig_img);
+vig_sprite.SetX(0);
+vig_sprite.SetY(0);
+vig_sprite.SetZ(1);
+
+# ---------- title / subtitle ----------
+title_img = Image("title.png");
+title = Sprite(title_img);
+title.SetX(cx - title_img.GetWidth() / 2);
+title.SetY(cy - 200);
+title.SetZ(5);
+
+sub_img = Image("subtitle.png");
+sub = Sprite(sub_img);
+sub.SetX(cx - sub_img.GetWidth() / 2);
+sub.SetY(cy - 120);
+sub.SetZ(5);
+
+# ---------- breathing spinner (3 dots) ----------
+dot_img = Image("dot.png");
+dot_w = dot_img.GetWidth();
+dot_y = cy - 40;
+dot_gap = dot_w * 2.4;
+
+dot1 = Sprite(dot_img);
+dot2 = Sprite(dot_img);
+dot3 = Sprite(dot_img);
+dot1.SetX(cx - dot_gap - dot_w / 2);  dot1.SetY(dot_y); dot1.SetZ(6);
+dot2.SetX(cx - dot_w / 2);            dot2.SetY(dot_y); dot2.SetZ(6);
+dot3.SetX(cx + dot_gap - dot_w / 2);  dot3.SetY(dot_y); dot3.SetZ(6);
+
+# ---------- progress bar ----------
+bar_track_img = Image("bar_track.png");
+bar_fill_img = Image("bar_fill.png");
+bar_w = bar_track_img.GetWidth();
+bar_h = bar_track_img.GetHeight();
+bar_x = cx - bar_w / 2;
+bar_y = sh - 140;
+
+bar_track = Sprite(bar_track_img);
+bar_track.SetX(bar_x); bar_track.SetY(bar_y); bar_track.SetZ(6);
+
+bar_fill = Sprite();
+bar_fill.SetX(bar_x); bar_fill.SetY(bar_y); bar_fill.SetZ(7);
+bar_fill.SetOpacity(0);
+
+# ---------- live status line (below progress bar) ----------
+# Requires Plymouth's label.so + pango/cairo/fontconfig + a font in the
+# initramfs (see /etc/dracut.conf.d/60-plymouth-text.conf). If text rendering
+# is unavailable Image.Text returns an empty image and the sprite stays blank.
+status_y = bar_y + bar_h + 18;
+status_sprite = Sprite();
+status_sprite.SetZ(6);
+status_sprite.SetOpacity(0);
+
+fun set_status_text(text) {
+    if (text == "") {
+        status_sprite.SetOpacity(0);
+        return;
+    }
+    img = Image.Text(text, 0.616, 0.663, 0.627, 0.85,
+                     "JetBrainsMono Nerd Font 14");
+    status_sprite.SetImage(img);
+    status_sprite.SetX(cx - img.GetWidth() / 2);
+    status_sprite.SetY(status_y);
+    status_sprite.SetOpacity(1);
+}
+
+# ---------- prompt elements (pre-allocated, opacity 0 until needed) ----------
+lock_img = Image("lock.png");
+lock_w = lock_img.GetWidth();
+lock_h = lock_img.GetHeight();
+lock_sprite = Sprite(lock_img);
+lock_sprite.SetX(cx - lock_w / 2);
+lock_sprite.SetY(cy - 80);
+lock_sprite.SetZ(8);
+lock_sprite.SetOpacity(0);
+
+prompt_label_img = Image("prompt.png");
+prompt_label = Sprite(prompt_label_img);
+prompt_label.SetX(cx - prompt_label_img.GetWidth() / 2);
+prompt_label.SetY(cy + 40);
+prompt_label.SetZ(8);
+prompt_label.SetOpacity(0);
+
+underline_img = Image("entry_underline.png");
+underline = Sprite(underline_img);
+underline.SetX(cx - underline_img.GetWidth() / 2);
+underline.SetY(cy + 130);
+underline.SetZ(8);
+underline.SetOpacity(0);
+
+err_img = Image("entry_underline_err.png");
+err_underline = Sprite(err_img);
+err_underline.SetX(cx - err_img.GetWidth() / 2);
+err_underline.SetY(cy + 130);
+err_underline.SetZ(9);
+err_underline.SetOpacity(0);
+
+# Pre-allocate up to MAX_BULLETS sprites in a row
+MAX_BULLETS = 32;
+bullet_img = Image("bullet.png");
+bw = bullet_img.GetWidth();
+bh = bullet_img.GetHeight();
+bullet_gap = bw * 0.6;
+bullets = [];
+for (i = 0; i < MAX_BULLETS; i++) {
+    s = Sprite(bullet_img);
+    s.SetZ(8);
+    s.SetOpacity(0);
+    bullets[i] = s;
+}
+
+fun layout_bullets(n) {
+    if (n > MAX_BULLETS) n = MAX_BULLETS;
+    total_w = 0;
+    if (n > 0) total_w = n * bw + (n - 1) * bullet_gap;
+    start_x = cx - total_w / 2;
+    by = cy + 95;
+    for (i = 0; i < MAX_BULLETS; i++) {
+        if (i < n) {
+            bullets[i].SetX(start_x + i * (bw + bullet_gap));
+            bullets[i].SetY(by);
+            bullets[i].SetOpacity(1);
+        } else {
+            bullets[i].SetOpacity(0);
+        }
+    }
+}
+
+# ---------- state ----------
+time = 0;
+state = "boot";   # "boot" | "prompt" | "quit"
+status_count = 0;
+services_est = 28;
+target_progress = 0.0;
+shown_progress = 0.0;
+err_flash_until = 0;
+
+fun set_bar_progress(p) {
+    if (p < 0) p = 0;
+    if (p > 1) p = 1;
+    fill_w = Math.Int(bar_w * p);
+    if (fill_w < 1) {
+        bar_fill.SetOpacity(0);
+        return;
+    }
+    cropped = bar_fill_img.Crop(0, 0, fill_w, bar_h);
+    bar_fill.SetImage(cropped);
+    bar_fill.SetOpacity(1);
+}
+
+# ---------- refresh (50Hz) ----------
+fun refresh() {
+    time++;
+
+    # Tween progress
+    delta = target_progress - shown_progress;
+    if (delta > 0.001 || delta < -0.001) {
+        shown_progress = shown_progress + delta * 0.08;
+        set_bar_progress(shown_progress);
+    }
+
+    # Error flash decay
+    if (err_flash_until > 0 && time > err_flash_until) {
+        err_underline.SetOpacity(0);
+        err_flash_until = 0;
+    }
+
+    if (state == "prompt") {
+        # Pulse the lock icon to draw attention
+        pulse = 0.55 + 0.45 * (0.5 + 0.5 * Math.Cos(time / 12));
+        lock_sprite.SetOpacity(pulse);
+        return;
+    }
+
+    # Phase-shifted breathing dots during normal boot
+    a1 = 0.20 + 0.80 * (0.5 + 0.5 * Math.Cos(time / 16));
+    a2 = 0.20 + 0.80 * (0.5 + 0.5 * Math.Cos(time / 16 - 1.05));
+    a3 = 0.20 + 0.80 * (0.5 + 0.5 * Math.Cos(time / 16 - 2.10));
+    dot1.SetOpacity(a1);
+    dot2.SetOpacity(a2);
+    dot3.SetOpacity(a3);
+}
+Plymouth.SetRefreshFunction(refresh);
+
+# ---------- OpenRC plugin status updates ----------
+fun status_update(status) {
+    status_count++;
+    target_progress = status_count / services_est;
+    if (target_progress > 0.98) target_progress = 0.98;
+    set_status_text(status);
+}
+Plymouth.SetUpdateStatusFunction(status_update);
+
+fun boot_progress(duration, progress) {
+    if (progress > target_progress) target_progress = progress;
+}
+Plymouth.SetBootProgressFunction(boot_progress);
+
+fun root_mounted() {
+    if (target_progress < 0.5) target_progress = 0.5;
+}
+Plymouth.SetRootMountedFunction(root_mounted);
+
+# ---------- LUKS / GPG password prompt ----------
+fun show_prompt_chrome() {
+    # Hide spinner during prompt
+    dot1.SetOpacity(0); dot2.SetOpacity(0); dot3.SetOpacity(0);
+    title.SetOpacity(0); sub.SetOpacity(0);
+    status_sprite.SetOpacity(0);
+    # Show lock + label + underline
+    lock_sprite.SetOpacity(1);
+    prompt_label.SetOpacity(1);
+    underline.SetOpacity(0.7);
+}
+
+fun hide_prompt_chrome() {
+    lock_sprite.SetOpacity(0);
+    prompt_label.SetOpacity(0);
+    underline.SetOpacity(0);
+    err_underline.SetOpacity(0);
+    layout_bullets(0);
+    title.SetOpacity(1);
+    sub.SetOpacity(1);
+}
+
+fun display_password(prompt_text, n_bullets) {
+    state = "prompt";
+    show_prompt_chrome();
+    layout_bullets(n_bullets);
+}
+Plymouth.SetDisplayPasswordFunction(display_password);
+
+fun display_normal() {
+    state = "boot";
+    hide_prompt_chrome();
+}
+Plymouth.SetDisplayNormalFunction(display_normal);
+
+# ---------- error / log messages (e.g. wrong passphrase) ----------
+fun display_message(text) {
+    err_underline.SetOpacity(1);
+    err_flash_until = time + 60;  # ~1.2s at 50Hz
+}
+Plymouth.SetMessageFunction(display_message);
+
+# ---------- quit ----------
+fun quit_handler() {
+    state = "quit";
+    title.SetOpacity(0); sub.SetOpacity(0);
+    dot1.SetOpacity(0); dot2.SetOpacity(0); dot3.SetOpacity(0);
+    bar_track.SetOpacity(0); bar_fill.SetOpacity(0);
+    status_sprite.SetOpacity(0);
+    vig_sprite.SetOpacity(0); bg_sprite.SetOpacity(0);
+    hide_prompt_chrome();
+}
+Plymouth.SetQuitFunction(quit_handler);

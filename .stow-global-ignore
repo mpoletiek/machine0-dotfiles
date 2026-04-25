@@ -1,0 +1,14 @@
+\.bak$
+\.swp$
+\.swo$
+~$
+\.DS_Store
+\.claude
+\.git
+\.gitignore
+\.stow-global-ignore
+README\.md
+install\.sh
+update\.sh
+Makefile
+system

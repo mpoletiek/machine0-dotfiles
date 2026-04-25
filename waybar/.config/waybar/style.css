@@ -1,0 +1,181 @@
+/* =============================================================
+   Waybar — Everforest dark (matches Hyprland/kitty/tmux/noctalia)
+   Dormant fallback; noctalia-shell is the active bar.
+   ============================================================= */
+
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 15px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(45, 53, 59, 0.85);   /* #2d353b */
+    border-bottom: 2px solid #4f585e;
+    color: #d3c6aa;
+    transition: background 200ms ease-in-out;
+}
+
+/* -------------------------------------------------------------
+   Generic module padding & hover
+   ------------------------------------------------------------- */
+#workspaces,
+#submap,
+#window,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#network,
+#wireplumber,
+#keyboard-state,
+#clock,
+#tray,
+#custom-gpu,
+#custom-mic,
+#custom-dnd {
+    padding: 0 10px;
+    color: #d3c6aa;
+    background: transparent;
+    border-bottom: 2px solid transparent;
+    transition: color 150ms, border-bottom-color 150ms, background 150ms;
+}
+
+/* -------------------------------------------------------------
+   Workspaces
+   ------------------------------------------------------------- */
+#workspaces {
+    padding: 0 4px;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    margin: 3px 2px;
+    color: #7a8478;
+    background: transparent;
+    border-bottom: 2px solid transparent;
+    border-radius: 4px;
+    transition: all 150ms ease-in-out;
+}
+
+#workspaces button.active {
+    color: #2d353b;
+    background: rgba(167, 192, 128, 0.85);   /* #a7c080 */
+    border-bottom: 2px solid #a7c080;
+}
+
+#workspaces button:hover {
+    background: rgba(167, 192, 128, 0.22);
+    border-bottom: 2px solid #a7c080;
+    color: #d3c6aa;
+}
+
+#workspaces button.urgent {
+    color: #2d353b;
+    background: rgba(230, 126, 128, 0.55);   /* #e67e80 */
+}
+
+/* -------------------------------------------------------------
+   Active submap indicator (resize mode, etc.)
+   ------------------------------------------------------------- */
+#submap {
+    color: #a7c080;
+    font-weight: bold;
+}
+
+/* -------------------------------------------------------------
+   Window title
+   ------------------------------------------------------------- */
+#window {
+    color: #9da9a0;
+    font-style: italic;
+}
+
+/* -------------------------------------------------------------
+   System stats — subtle color cues
+   ------------------------------------------------------------- */
+#cpu      { color: #dbbc7f; }
+#memory   { color: #dbbc7f; }
+#disk     { color: #dbbc7f; }
+
+#temperature { color: #dbbc7f; }
+#temperature.critical {
+    color: #2d353b;
+    background: rgba(230, 126, 128, 0.7);
+}
+
+#custom-gpu {
+    color: #83c092;
+}
+
+/* -------------------------------------------------------------
+   Network, audio
+   ------------------------------------------------------------- */
+#network { color: #9da9a0; }
+#network.disconnected {
+    color: #2d353b;
+    background: rgba(230, 126, 128, 0.6);
+}
+
+#wireplumber { color: #83c092; }
+#wireplumber.muted { color: #4f585e; }
+
+#custom-mic { color: #83c092; padding: 0 10px; }
+#custom-mic.muted { color: #4f585e; }
+#custom-mic:hover {
+    background: rgba(167, 192, 128, 0.22);
+    border-bottom: 2px solid #a7c080;
+}
+
+/* -------------------------------------------------------------
+   Keyboard state
+   ------------------------------------------------------------- */
+#keyboard-state { color: #7a8478; }
+#keyboard-state > label.locked {
+    color: #a7c080;
+    font-weight: bold;
+}
+
+/* -------------------------------------------------------------
+   Clock — accent
+   ------------------------------------------------------------- */
+#clock {
+    color: #a7c080;
+    font-weight: bold;
+    padding: 0 14px;
+}
+
+/* -------------------------------------------------------------
+   DND / notifications
+   ------------------------------------------------------------- */
+#custom-dnd.dnd-on {
+    color: #7a8478;
+}
+#custom-dnd.dnd-off {
+    color: #d3c6aa;
+}
+#custom-dnd:hover {
+    background: rgba(167, 192, 128, 0.22);
+}
+
+/* -------------------------------------------------------------
+   Tray
+   ------------------------------------------------------------- */
+#tray {
+    padding: 0 12px;
+}
+#tray > .passive   { -gtk-icon-effect: dim; }
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background: rgba(230, 126, 128, 0.35);
+}
+
+/* -------------------------------------------------------------
+   Hover for the clickable-from-bar modules
+   ------------------------------------------------------------- */
+#wireplumber:hover,
+#custom-gpu:hover,
+#clock:hover {
+    background: rgba(167, 192, 128, 0.22);
+    border-bottom: 2px solid #a7c080;
+}

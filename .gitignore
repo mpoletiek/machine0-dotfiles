@@ -1,0 +1,33 @@
+# Editor / OS scratch
+*.bak
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Claude Code / agent scratch
+.claude/
+CLAUDE.md.local
+
+# zsh history / runtime
+.zsh_history
+.zsh_sessions/
+.zcompdump*
+.zinit/
+
+# p10k cache
+.p10k-*
+
+# nvim runtime (lazy.nvim installs based on lazy-lock.json)
+plugin/packer_compiled.lua
+
+# tmux runtime
+.tmux/plugins/
+
+# hyprpm build artifacts
+.local/share/hyprpm/
+
+# Machine-local overrides (intentional — keep out of repo)
+99-local.conf
+*-local.conf
+*.local
