@@ -202,3 +202,15 @@ export PATH="$HOME/.local/bin:$PATH"
 # Powerlevel10k config (run `p10k configure` on first launch to generate)
 # ----------------------------------------------------------------------------
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+# ----------------------------------------------------------------------------
+# Yazi: `y` — wrapper that follows yazi's last cwd on quit (press Q)
+# ----------------------------------------------------------------------------
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+}

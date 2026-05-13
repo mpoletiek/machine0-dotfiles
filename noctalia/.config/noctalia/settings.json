@@ -9,7 +9,7 @@
         "density": "default",
         "enableClipPreview": true,
         "enableClipboardChips": true,
-        "enableClipboardHistory": false,
+        "enableClipboardHistory": true,
         "enableClipboardSmartIcons": true,
         "enableSessionSearch": true,
         "enableSettingsSearch": true,
@@ -98,6 +98,11 @@
                     "showBadge": true,
                     "showLabelsOnlyWhenOccupied": true,
                     "unfocusedIconsOpacity": 1
+                },
+                {
+                    "defaultSettings": {
+                    },
+                    "id": "plugin:workspace-overview"
                 }
             ],
             "left": [
@@ -181,6 +186,14 @@
                     "id": "Tray",
                     "pinned": [
                     ]
+                },
+                {
+                    "defaultSettings": {
+                        "density": "comfortable",
+                        "maxHistorySize": 100,
+                        "showImagePreviews": true
+                    },
+                    "id": "plugin:clipboard"
                 },
                 {
                     "hideWhenZero": false,
@@ -456,6 +469,7 @@
         "lockScreenBlur": 0.24,
         "lockScreenCountdownDuration": 10000,
         "lockScreenMonitors": [
+            "DP-3"
         ],
         "lockScreenTint": 0.24,
         "passwordChars": false,
@@ -491,11 +505,11 @@
         "fadeDuration": 5,
         "lockCommand": "",
         "lockTimeout": 300,
-        "resumeLockCommand": "",
+        "resumeLockCommand": "notify-send \"Welcome back!\"",
         "resumeScreenOffCommand": "",
         "resumeSuspendCommand": "",
         "screenOffCommand": "",
-        "screenOffTimeout": 0,
+        "screenOffTimeout": 602,
         "suspendCommand": "",
         "suspendTimeout": 0
     },
@@ -528,11 +542,11 @@
     "nightLight": {
         "autoSchedule": true,
         "dayTemp": "6500",
-        "enabled": false,
+        "enabled": true,
         "forced": false,
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
-        "nightTemp": "4000"
+        "nightTemp": "3601"
     },
     "noctaliaPerformance": {
         "disableDesktopWidgets": true,
@@ -681,6 +695,42 @@
     },
     "templates": {
         "activeTemplates": [
+            {
+                "enabled": true,
+                "id": "yazi"
+            },
+            {
+                "enabled": true,
+                "id": "discord"
+            },
+            {
+                "enabled": true,
+                "id": "gtk"
+            },
+            {
+                "enabled": true,
+                "id": "telegram"
+            },
+            {
+                "enabled": true,
+                "id": "kitty"
+            },
+            {
+                "enabled": true,
+                "id": "btop"
+            },
+            {
+                "enabled": true,
+                "id": "hyprland"
+            },
+            {
+                "enabled": true,
+                "id": "hyprtoolkit"
+            },
+            {
+                "enabled": true,
+                "id": "code"
+            }
         ],
         "enableUserTheming": false
     },

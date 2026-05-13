@@ -22,7 +22,7 @@ command -v git  >/dev/null || die "git not installed."
 
 info "Stowing user dotfiles into \$HOME"
 cd "$DOTFILES"
-stow -v -R -t "$HOME" hypr kitty waybar dunst nvim tmux zsh noctalia bin
+stow -v -R -t "$HOME" hypr kitty waybar dunst nvim tmux zsh noctalia bin razer-effects
 ok "user dotfiles linked"
 
 info "Installing system profile snippet"
