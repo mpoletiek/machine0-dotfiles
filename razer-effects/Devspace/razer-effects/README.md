@@ -10,6 +10,7 @@ login (see `hypr/.config/hypr/conf.d/30-autostart.conf`, exec-once #9).
 | ---------------- | ----------------------------------------------------------- |
 | `ripple.py`      | Main effect — green base + RAM/CPU bars + audio VU + disk I/O + keypress ripples |
 | `rainbow_wave.py`| Hello-world: scrolling rainbow across the matrix            |
+| `demo.sh`        | Exercise RAM / CPU / disk so `ripple.py`'s bars visibly animate (~90s) |
 | `probe_evdev.py` | Diagnostic — which `/dev/input/event*` fires on keypress    |
 | `probe_audio.py` | Diagnostic — measure per-band FFT magnitudes from `parec`   |
 
