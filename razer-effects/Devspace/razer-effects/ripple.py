@@ -14,6 +14,7 @@ Requires:
   - membership in 'plugdev' (to read /dev/input/event*)
   - python-evdev (installed in this project's .venv)
 """
+import glob
 import math
 import re
 import signal
@@ -33,7 +34,9 @@ SPEED          = 12.0              # ring radius growth (cells / second)
 LIFETIME       = 1.0               # seconds before a ripple fades out
 THICKNESS      = 1.5               # ring thickness in cells
 FPS            = 30
-KBD_EVDEV_PATH = "/dev/input/by-id/usb-Razer_Razer_BlackWidow_V3_Pro-if01-event-kbd"
+# Glob covers both wired (no serial in name) and 2.4GHz wireless
+# (placeholder serial _000000000000 in name).
+KBD_EVDEV_GLOB = "/dev/input/by-id/usb-Razer_Razer_BlackWidow_V3_Pro*-if01-event-kbd"
 
 # RAM bar overlay
 RAM_BAR_ROW       = 0                    # matrix row hosting the bar (F-row)
@@ -288,10 +291,16 @@ def audio_reader(state, lock, stop_event):
 
 def keypress_reader(state, lock, stop_event):
     """Thread: append a Ripple at the matrix position of each keydown."""
+    matches = sorted(glob.glob(KBD_EVDEV_GLOB))
+    if not matches:
+        print(f"No evdev device matched {KBD_EVDEV_GLOB}", file=sys.stderr)
+        stop_event.set()
+        return
+    path = matches[0]
     try:
-        dev = evdev.InputDevice(KBD_EVDEV_PATH)
+        dev = evdev.InputDevice(path)
     except (FileNotFoundError, PermissionError) as e:
-        print(f"Could not open {KBD_EVDEV_PATH}: {e}", file=sys.stderr)
+        print(f"Could not open {path}: {e}", file=sys.stderr)
         stop_event.set()
         return
 
