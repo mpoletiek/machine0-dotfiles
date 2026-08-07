@@ -197,6 +197,7 @@ export LESS='-R --mouse --wheel-lines=3'
 export PATH="$HOME/.local/share/pinata:$PATH"
 export PATH="$HOME/.local/share/pinata-go-cli:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.railway/bin:$PATH"
 
 # ----------------------------------------------------------------------------
 # Powerlevel10k config (run `p10k configure` on first launch to generate)
@@ -214,3 +215,7 @@ function y() {
     fi
     rm -f -- "$tmp"
 }
+
+# >>> railway initialize >>>
+source "$HOME/.railway/env"
+# <<< railway initialize <<<
