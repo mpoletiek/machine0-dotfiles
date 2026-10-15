@@ -219,3 +219,7 @@ function y() {
 # >>> railway initialize >>>
 source "$HOME/.railway/env"
 # <<< railway initialize <<<
+
+# >>> Codex installer >>>
+export PATH="/home/mpoletiek/.local/bin:$PATH"
+# <<< Codex installer <<<
