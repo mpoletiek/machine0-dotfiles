@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import qs.Commons
 import qs.Widgets
 import qs.Services.UI
+import qs.Services.Compositor
 import Quickshell.Hyprland
 import Quickshell.Wayland
 
@@ -105,7 +106,8 @@ Item {
                                 Logger.i("Workspace Overview", "Move window " + windowData.winId + " to workspace " + targetWorkspaceId);
                                 
                                 // Hyprland command via Quickshell
-                                Hyprland.dispatch("movetoworkspacesilent " + targetWorkspaceId + ",address:" + windowData.winId);
+                                HyprlandService.dispatchCommand("movetoworkspacesilent", targetWorkspaceId + ",address:" + windowData.winId,
+                                    `hl.dsp.window.move({ workspace = ${targetWorkspaceId}, window = "${HyprlandService.luaQuote("address:" + windowData.winId)}", follow = false })`);
                             }
                         }
 
@@ -130,7 +132,8 @@ Item {
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
                                     if (targetWorkspaceId !== undefined) {
-                                        Hyprland.dispatch("workspace " + targetWorkspaceId);
+                                        HyprlandService.dispatchCommand("workspace", targetWorkspaceId,
+                                            `hl.dsp.focus({ workspace = ${targetWorkspaceId} })`);
                                         if (pluginApi) {
                                             pluginApi.closePanel(pluginApi.panelOpenScreen);
                                         }

@@ -169,13 +169,13 @@ Item {
 
   function backendBuildApplyCommand() {
     if (backendId === "sway") return SwayBackend.buildApplyCommand(draftOutputs, cfg, defaults);
-    if (backendId === "hyprland") return HyprlandBackend.buildApplyCommand(draftOutputs, cfg, defaults);
+    if (backendId === "hyprland") return HyprlandBackend.buildApplyCommand(draftOutputs, cfg, defaults, HyprlandService.useLuaDispatch);
     return { "error": pluginApi?.tr("errors.unsupportedBackend") };
   }
 
   function backendBuildConfigFileContent() {
     if (backendId === "sway") return SwayBackend.buildConfigFileContent(draftOutputs);
-    if (backendId === "hyprland") return HyprlandBackend.buildConfigFileContent(draftOutputs);
+    if (backendId === "hyprland") return HyprlandBackend.buildConfigFileContent(draftOutputs, HyprlandService.useLuaDispatch);
     return { "error": pluginApi?.tr("errors.unsupportedBackend") };
   }
 

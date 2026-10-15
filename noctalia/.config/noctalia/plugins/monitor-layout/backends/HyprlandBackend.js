@@ -86,7 +86,7 @@ function parseOutputs(rawText) {
   }
 }
 
-function buildApplyCommand(outputs, cfg, defaults) {
+function buildApplyCommand(outputs, cfg, defaults, useLua) {
   if (!outputs || outputs.length === 0) {
     return {
       "error": "No outputs available to apply."
@@ -117,6 +117,12 @@ function buildApplyCommand(outputs, cfg, defaults) {
     var position = Math.round(output.x) + "x" + Math.round(output.y);
     var scale = sanitizeNumber(output.scale || 1);
 
+    if (useLua) {
+      commands.push(shellQuote(hyprctlCommand) + " eval " +
+        shellQuote(luaMonitor(output.name, resolution, position, scale)));
+      continue;
+    }
+
     // hyprctl keyword monitor NAME,RESOLUTION,POSITION,SCALE
     commands.push(
       shellQuote(hyprctlCommand) +
@@ -139,7 +145,7 @@ function buildApplyCommand(outputs, cfg, defaults) {
   };
 }
 
-function buildConfigFileContent(outputs) {
+function buildConfigFileContent(outputs, useLua) {
   if (!outputs || outputs.length === 0) {
     return {
       "error": "No outputs available to configure."
@@ -169,7 +175,8 @@ function buildConfigFileContent(outputs) {
     var scale = sanitizeNumber(output.scale || 1);
 
     // Hyprland config format: monitor=NAME,RESOLUTION,POSITION,SCALE
-    var line = "monitor=" + output.name + "," + resolution + "," + position + "," + scale;
+    var line = useLua ? luaMonitor(output.name, resolution, position, scale) :
+      "monitor=" + output.name + "," + resolution + "," + position + "," + scale;
     lines.push(line);
   }
 
@@ -182,6 +189,13 @@ function buildConfigFileContent(outputs) {
   return {
     "content": lines.join("\n")
   };
+}
+
+function luaMonitor(name, resolution, position, scale) {
+  return "hl.monitor({ output = " + JSON.stringify(name) +
+    ", mode = " + JSON.stringify(resolution) +
+    ", position = " + JSON.stringify(position) +
+    ", scale = " + scale + " })";
 }
 
 function buildCommonModes(currentWidth, currentHeight, currentRefresh) {
