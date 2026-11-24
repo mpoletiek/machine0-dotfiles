@@ -1,0 +1,70 @@
+# Yazi user keymap — `prepend_keymap` adds bindings without losing built-ins.
+# Built-in defaults: https://yazi-rs.github.io/docs/configuration/keymap
+
+# --- Plugins ----------------------------------------------------------------
+
+[[mgr.prepend_keymap]]
+on   = "l"
+run  = "plugin smart-enter"
+desc = "Open file or enter directory"
+
+[[mgr.prepend_keymap]]
+on   = "<Enter>"
+run  = "plugin smart-enter"
+desc = "Open file or enter directory"
+
+# --- File actions -----------------------------------------------------------
+
+[[mgr.prepend_keymap]]
+on   = "e"
+run  = 'shell --block "nvim %s"'
+desc = "Edit in nvim"
+
+[[mgr.prepend_keymap]]
+on   = "o"
+run  = "open --interactive"
+desc = "Open with… (picker)"
+
+[[mgr.prepend_keymap]]
+on   = "F"
+run  = "plugin smart-filter"
+desc = "Smart fuzzy filter"
+
+[[mgr.prepend_keymap]]
+on   = [ "c", "m" ]
+run  = "plugin chmod"
+desc = "Chmod selected files"
+
+# --- Quick-jumps to common locations ---------------------------------------
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "h" ]
+run  = "cd ~"
+desc = "Go home"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "c" ]
+run  = "cd ~/.config"
+desc = "Go to ~/.config"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "D" ]
+run  = "cd ~/Devspace"
+desc = "Go to Devspace"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "s" ]
+run  = "cd ~/Pictures/Screenshots"
+desc = "Go to Screenshots"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "d" ]
+run  = "cd ~/Downloads"
+desc = "Go to Downloads"
+
+# --- Terminal ---------------------------------------------------------------
+
+[[mgr.prepend_keymap]]
+on   = "<C-t>"
+run  = 'shell --orphan "kitty --detach"'
+desc = "Open kitty in current directory"

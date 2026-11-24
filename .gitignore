@@ -31,3 +31,6 @@ plugin/packer_compiled.lua
 99-local.conf
 *-local.conf
 *.local
+
+# Ad-hoc config backups (e.g. yazi.toml.bak-pre-26.9)
+*.bak-*

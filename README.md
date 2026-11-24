@@ -18,6 +18,7 @@ waybar/dunst fallbacks.
 | `tmux/` | `~/.tmux.conf` — prefix `C-a`, vi mode, tpm, sessionx, continuum auto-restore |
 | `zsh/` | `~/.zshrc` + `~/.p10k.zsh` — zinit, p10k, fast-syntax-highlighting, autosuggestions, fzf-tab, atuin, zoxide, direnv, modern CLI aliases |
 | `nvim/` | `~/.config/nvim/` — init.lua + lua/config/ + lua/plugins/ + lazy-lock.json (pinned plugin versions). Theme: neanias/everforest-nvim |
+| `yazi/` | `~/.config/yazi/` — yazi.toml (openers use `%s` placeholders, required since 26.9), keymap.toml, init.lua, theme.toml → `noctalia` flavor (Noctalia-generated). Plugins from yazi-rs/plugins are vendored and pinned in package.toml; `ya pkg upgrade` updates them |
 | `waybar/` | `~/.config/waybar/` — **dormant** (replaced by noctalia-shell). Themed for rollback-readiness. |
 | `dunst/` | `~/.config/dunst/dunstrc` — **dormant** (notifications now owned by noctalia). Themed for rollback. |
 | `bin/` | `~/.local/bin/*` — small helper scripts |

@@ -1,0 +1,107 @@
+# Yazi user config — overrides the built-in defaults; missing keys fall through.
+# Theme/flavor is rendered by Noctalia at ~/.config/yazi/theme.toml.
+
+[mgr]
+ratio          = [1, 3, 4]
+sort_by        = "natural"
+sort_dir_first = true
+sort_sensitive = false
+sort_reverse   = false
+show_hidden    = false      # toggle live with `.`
+show_symlink   = true
+linemode       = "size"
+
+[preview]
+max_width     = 1000
+max_height    = 1000
+image_quality = 85
+
+[opener]
+edit = [
+    { run = 'nvim %s',                 block = true,  desc = "Edit in nvim" },
+    { run = 'code %s',                 orphan = true, desc = "VS Code" },
+]
+glow-md = [
+    { run = 'glow -p %s',              block = true,  desc = "Preview with glow" },
+    { run = 'nvim %s',                 block = true,  desc = "Edit in nvim" },
+]
+play = [
+    { run = 'mpv --force-window=yes %s', orphan = true, desc = "Play in mpv" },
+]
+view = [
+    { run = 'imv %s',                  orphan = true, desc = "View in imv" },
+]
+read = [
+    { run = 'evince %s',               orphan = true, desc = "Open in Evince" },
+]
+extract = [
+    { run = 'ya pub extract --list %s', desc = "Extract here" },
+]
+reveal = [
+    { run = 'kitty -e nvim -- %s',     orphan = true, desc = "Open in new kitty" },
+]
+
+[open]
+# Order matters — first matching rule's first opener is the Enter default.
+# Hit `o` to pick another opener from the matching rule.
+rules = [
+    # Markdown — glow preview by default, nvim as fallback (press `o`)
+    { url  = "*.md",                            use = "glow-md" },
+    { url  = "*.markdown",                      use = "glow-md" },
+    { mime = "text/markdown",                   use = "glow-md" },
+
+    # Media
+    { mime = "image/*",                         use = "view" },
+    { mime = "video/*",                         use = "play" },
+    { mime = "audio/*",                         use = "play" },
+
+    # Documents
+    { mime = "application/pdf",                 use = "read" },
+
+    # Archives
+    { mime = "application/zip",                 use = "extract" },
+    { mime = "application/x-tar",               use = "extract" },
+    { mime = "application/gzip",                use = "extract" },
+    { mime = "application/x-bzip",              use = "extract" },
+    { mime = "application/x-bzip2",             use = "extract" },
+    { mime = "application/x-7z-compressed",     use = "extract" },
+    { mime = "application/x-rar",               use = "extract" },
+    { mime = "application/xz",                  use = "extract" },
+    { mime = "application/zstd",                use = "extract" },
+
+    # Generic text — nvim
+    { mime = "text/*",                          use = "edit" },
+    { mime = "application/json",                use = "edit" },
+    { mime = "application/javascript",          use = "edit" },
+    { mime = "application/x-shellscript",       use = "edit" },
+    { mime = "application/toml",                use = "edit" },
+]
+
+# --- Plugin fetchers (git status icons + faster MIME detection) ---
+# `id` field can be dropped once Yazi > 26.1.22.
+
+[[plugin.prepend_fetchers]]
+id    = "mime"
+url   = "local://*"
+run   = "mime-ext.local"
+prio  = "high"
+group = "mime"
+
+[[plugin.prepend_fetchers]]
+id    = "mime"
+url   = "remote://*"
+run   = "mime-ext.remote"
+prio  = "high"
+group = "mime"
+
+[[plugin.prepend_fetchers]]
+id    = "git"
+url   = "*"
+run   = "git"
+group = "git"
+
+[[plugin.prepend_fetchers]]
+id    = "git"
+url   = "*/"
+run   = "git"
+group = "git"
