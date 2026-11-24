@@ -95,7 +95,7 @@ hl.bind(mainMod .. " + CTRL + PRINT", hl.dsp.exec_cmd("/usr/bin/noctalia msg scr
 
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("/usr/bin/noctalia msg session lock"), { locked = true })
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("/usr/bin/noctalia msg session lock-and-suspend"), { locked = true })
-hl.bind(mainMod .. " + BACKSPACE", hl.dsp.exec_cmd("kitty --class kittyscreensaver cmatrix -C red"), { locked = true })
+hl.bind(mainMod .. " + BACKSPACE", hl.dsp.exec_cmd("kitty --class kittyscreensaver cmatrix"), { locked = true })
 
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("/usr/bin/noctalia msg panel-toggle control-center"))
 hl.bind(mainMod .. " + I", hl.dsp.exec_cmd("/usr/bin/noctalia msg caffeine-toggle"))
